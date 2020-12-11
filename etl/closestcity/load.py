@@ -4,6 +4,7 @@ import os
 from closestcity import log_dataframe
 
 import pandas as pd
+import pangres
 import sqlalchemy
 from sqlalchemy.engine import Engine
 
@@ -26,14 +27,14 @@ def load(**kwargs):
     logger.info('Loaded %s rows, %s columns', *frame.shape)
     log_dataframe(frame, logger)
 
+    if not kwargs.get('publish'):
+        logger.warning('Publish flag not set, skipping')
+        return
+
     engine: Engine = sqlalchemy.create_engine(kwargs.get('write_url'))
-    connecion = engine.connect()
-    
-    
-    
-    print(engine)
 
+    table = worldcities_file.split('.')[0]
+    logger.info('Writing frame to %s', table)
+    pangres.upsert(engine, frame, table, if_row_exists='update', create_schema=True, add_new_columns=True)
 
-
-    connecion.close()
     engine.dispose()

@@ -4,3 +4,4 @@ psycopg2>=2.8.6
 flake8
 requests>=2.25.0
 rich>=9.3.0
+pangres>=2.2.1

@@ -14,6 +14,9 @@ if __name__ == "__main__":
     parser.add_argument('-w', '--working_dir', default='data')
     parser.add_argument('--worldcities_file_zip', default='worldcities.zip')
     parser.add_argument('--worldcities_file', default='worldcities.csv')
+    parser.add_argument(
+        '--write_url', 
+        default=f'postgres://{os.environ["PGUSER"]}:{os.environ["PGPASSWORD"]}@{os.environ.get("PGHOST", "localhost")}:{os.environ.get("PGHOST", "5432")}/{os.environ.get("PGDATABASE", "closestcity")}')
 
     args = parser.parse_args()
     logger.debug(vars(args))

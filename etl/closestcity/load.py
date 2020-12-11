@@ -4,6 +4,8 @@ import os
 from closestcity import log_dataframe
 
 import pandas as pd
+import sqlalchemy
+from sqlalchemy.engine import Engine
 
 logger = logging.getLogger(__name__)
 
@@ -24,3 +26,14 @@ def load(**kwargs):
     logger.info('Loaded %s rows, %s columns', *frame.shape)
     log_dataframe(frame, logger)
 
+    engine: Engine = sqlalchemy.create_engine(kwargs.get('write_url'))
+    connecion = engine.connect()
+    
+    
+    
+    print(engine)
+
+
+
+    connecion.close()
+    engine.dispose()

@@ -1,0 +1,22 @@
+version: "3.9"
+  
+services:
+  etl_database:
+    image: postgres:latest
+    volumes:
+      - etl_database/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
+    networks:
+      - database
+
+networks:
+  database:
+    driver: bridge
+
+volumes:
+  etl_database:

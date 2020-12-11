@@ -27,6 +27,16 @@
             "env": {
                 "PGDATABASE": "closestcity"
             }
+        },
+        {
+            "name": "ETL Create Geometry View",
+            "type": "python",
+            "request": "launch",
+            "module": "closestcity",
+            "args": ["--step", "create_view", "--publish"],
+            "env": {
+                "PGDATABASE": "closestcity"
+            }
         }
     ]
 }

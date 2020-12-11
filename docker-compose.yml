@@ -2,7 +2,7 @@ version: "3.9"
   
 services:
   etl_database:
-    image: postgres:latest
+    image: postgis/postgis:latest
     volumes:
       - etl_database/var/lib/postgresql/data
     ports:

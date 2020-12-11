@@ -511,6 +511,10 @@ MigrationBackup/
 !.vscode/launch.json
 *.code-workspace
 
+etl/.vscode/*
+!etl/.vscode/tasks.json
+!etl/.vscode/launch.json
+
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history

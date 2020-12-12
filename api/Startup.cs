@@ -1,15 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ClosestCity.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace ClosestCity
@@ -20,7 +16,7 @@ namespace ClosestCity
         {
             Configuration = configuration;
         }
-
+    
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -31,6 +27,15 @@ namespace ClosestCity
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ClosestCity", Version = "v1" });
+            });
+
+            services.AddDbContextPool<closestcityContext>(options => 
+            {
+                options.UseNpgsql(
+                    this.Configuration.GetValue<string>("ConnectionStrings:Database"), 
+                    options => options.UseNetTopologySuite());
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                options.LogTo(x => Console.WriteLine(x));
             });
         }
 

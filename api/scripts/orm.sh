@@ -3,4 +3,6 @@ dotnet ef dbcontext scaffold \
     "Npgsql.EntityFrameworkCore.PostgreSQL" \
     -o Models \
     --no-onconfiguring \
-    --schema public
+    --schema public \
+    --context ApiContext \
+    --force

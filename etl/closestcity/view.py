@@ -15,7 +15,7 @@ def create_view(**kwargs):
     table = worldcities_file.split('.')[0]
 
     engine: Engine = sqlalchemy.create_engine(kwargs.get('write_url'))
-    create_view = f'CREATE MATERIALIZED VIEW {table}_geometry AS select *, ST_SetSRID(ST_MakePoint(lng, lat), {srid}) as geom from {table}'
+    create_view = f'CREATE MATERIALIZED VIEW {table}_geometry AS select *, CAST(ST_SetSRID(ST_MakePoint(lng, lat), {srid}) as geography) as geom from {table}'
 
     logger.info(f'Applying {create_view}')
 

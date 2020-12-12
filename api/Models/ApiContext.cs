@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ClosestCity.Models
 {
-    public partial class closestcityContext : DbContext
+    public partial class ApiContext : DbContext
     {
-        public closestcityContext(DbContextOptions<closestcityContext> options)
+        public ApiContext(DbContextOptions<ApiContext> options)
             : base(options)
         {
         }
@@ -40,7 +40,9 @@ namespace ClosestCity.Models
 
                 entity.Property(e => e.Country).HasColumnName("country");
 
-                entity.Property(e => e.Geom).HasColumnName("geom");
+                entity.Property(e => e.Geom)
+                    .HasColumnType("geography")
+                    .HasColumnName("geom");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 

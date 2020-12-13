@@ -40,21 +40,21 @@ namespace ClosestCity.Controllers
         [HttpGet]
         [ActionName("ByLocation")]
         [Produces("application/json")]
-        public async Task<IEnumerable<WorldcitiesGeometry>> ByLocation(
+        public async Task<IEnumerable<dynamic>> ByLocation(
             [FromQuery] double latitude = 51.533007,
             [FromQuery] double longitude = -0.188142,
-            [FromQuery] double radius = 10_000,
+            [FromQuery] double radiusKm = 10_000,
             CancellationToken token = default)
         {
-            return await this.ByLocation2(new Coordinate(longitude, latitude), radius, token);
+            return await this.ByLocation2(new Coordinate(longitude, latitude), radiusKm, token);
         }
 
         [HttpGet]
         [ActionName("ByLocation2")]
         [Produces("application/json")]
-        public async Task<IEnumerable<WorldcitiesGeometry>> ByLocation2(
+        public async Task<IEnumerable<dynamic>> ByLocation2(
             [FromBody] Coordinate coordinate,
-            [FromQuery] double radius = 100,
+            [FromQuery] double radiusKm = 100,
             CancellationToken token = default)
         {
             var srid = this.configuration.GetValue<int>("SRID");
@@ -62,8 +62,17 @@ namespace ClosestCity.Controllers
             var point = fac.CreatePoint(coordinate);
 
             return await sql.Set<WorldcitiesGeometry>()
-                .Where(x => x.Geom.Distance(point) < radius)
+                .Where(x => x.Geom.Distance(point) < radiusKm)
                 .Take(100)
+                .Select(x => new
+                {
+                    x.City,
+                    x.AdminName,
+                    x.Lat,
+                    x.Lng,
+                    DistanceKm = x.Geom.Distance(point)
+                })
+                .OrderByDescending(x => x.DistanceKm)
                 .ToListAsync(token);
         }
     }

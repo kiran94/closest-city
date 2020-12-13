@@ -9,6 +9,8 @@ using Microsoft.OpenApi.Models;
 using NetTopologySuite.IO.Converters;
 using Microsoft.AspNetCore.Builder;
 using NetTopologySuite.Geometries;
+using System.IO;
+using System.Reflection;
 
 // Configure Server
 var host = Host.CreateDefaultBuilder(args)
@@ -17,7 +19,14 @@ var host = Host.CreateDefaultBuilder(args)
         webBuilder.ConfigureServices((host, services) =>
         {
             services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new GeoJsonConverterFactory()));
-            services.AddSwaggerGen(options => options.SwaggerDoc("v1", new OpenApiInfo { Title = "ClosestCity", Version = "v1" }));
+            services.AddSwaggerGen(options => 
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "ClosestCity", Version = "v1" });
+                        
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                options.IncludeXmlComments(xmlPath);
+            });
 
             services.AddSingleton<GeometryFactory>(
                 x => NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(host.Configuration.GetValue<int>("SRID")));

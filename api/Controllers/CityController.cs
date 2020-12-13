@@ -18,12 +18,14 @@ namespace ClosestCity.Controllers
         private readonly ApiContext sql;
         private readonly ILogger<CityController> logger; 
         private readonly IConfiguration configuration;
+        private readonly GeometryFactory geometryFactory;
         
-        public CityController(ApiContext sql, ILogger<CityController> logger, IConfiguration configuration)
+        public CityController(ApiContext sql, ILogger<CityController> logger, IConfiguration configuration, GeometryFactory geometryFactory)
         {
             this.sql = sql;
             this.logger = logger;
             this.configuration = configuration;
+            this.geometryFactory = geometryFactory;
         }
 
         [HttpGet]
@@ -57,10 +59,7 @@ namespace ClosestCity.Controllers
             [FromQuery] double radiusKm = 100,
             CancellationToken token = default)
         {
-            var srid = this.configuration.GetValue<int>("SRID");
-            var fac = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(srid);
-            var point = fac.CreatePoint(coordinate);
-
+            var point = this.geometryFactory.CreatePoint(coordinate);
             return await sql.Set<WorldcitiesGeometry>()
                 .Where(x => x.Geom.Distance(point) < radiusKm)
                 .Take(100)

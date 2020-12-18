@@ -17,7 +17,7 @@ if __name__ == "__main__":
     parser.add_argument('--worldcities_file', default='worldcities.csv')
     parser.add_argument(
         '--write_url', 
-        default=f'postgres://{os.environ["PGUSER"]}:{os.environ["PGPASSWORD"]}@{os.environ.get("PGHOST", "localhost")}:{os.environ.get("PGHOST", "5432")}/{os.environ.get("PGDATABASE", "closestcity")}')
+        default=f'postgres://{os.environ["PGUSER"]}:{os.environ["PGPASSWORD"]}@{os.environ.get("PGHOST", "localhost")}:{os.environ.get("PGPORT", "5432")}/{os.environ.get("PGDATABASE", "closestcity")}')
     parser.add_argument('--publish', action='store_true')
     parser.add_argument('--srid', default='4326')
 

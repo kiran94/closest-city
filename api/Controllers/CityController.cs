@@ -4,12 +4,14 @@ namespace ClosestCity.Controllers
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using ClosestCity.Examples;
     using ClosestCity.Models;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using NetTopologySuite.Geometries;
+    using Swashbuckle.AspNetCore.Filters;
 
     /// <summary>
     /// Access City Information
@@ -77,6 +79,7 @@ namespace ClosestCity.Controllers
         [HttpPost]
         [ActionName("ByLocation")]
         [Produces("application/json")]
+        [SwaggerRequestExample(typeof(Coordinate), typeof(ByLocationExamples))]
         public async Task<IEnumerable<dynamic>> ByLocation(
             [FromBody] Coordinate coordinate,
             [FromQuery] double radiusKm = 100,

@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Builder;
 using NetTopologySuite.Geometries;
 using System.IO;
 using System.Reflection;
+using Swashbuckle.AspNetCore.Filters;
+using ClosestCity.Examples;
 
 // Configure Server
 var host = Host.CreateDefaultBuilder(args)
@@ -22,11 +24,13 @@ var host = Host.CreateDefaultBuilder(args)
             services.AddSwaggerGen(options => 
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "ClosestCity", Version = "v1" });
-                        
+
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 options.IncludeXmlComments(xmlPath);
             });
+
+            services.AddSwaggerExamplesFromAssemblyOf<ByLocationExamples>();
 
             services.AddSingleton<GeometryFactory>(
                 x => NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(host.Configuration.GetValue<int>("SRID")));
